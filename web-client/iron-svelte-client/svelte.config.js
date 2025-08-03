@@ -12,7 +12,7 @@ const config = {
             pages: 'build/browser',
             assets: 'build/browser',
             fallback: null,
-            precompress: false,
+            precompress: true,
             strict: true,
         }),
     },
