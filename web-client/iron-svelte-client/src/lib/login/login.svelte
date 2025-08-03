@@ -6,13 +6,16 @@
     import { toast } from '$lib/messages/message-store';
     import { showLogin } from '$lib/login/login-store';
     import { onMount } from 'svelte';
-
+    const params = new URLSearchParams(window.location.search);
     let username = 'Administrator';
-    let password = 'DevoLabs123!';
-    let gatewayAddress = 'ws://localhost:7171/jet/rdp';
-    let hostname = '10.10.0.3:3389';
+    let password = '';
+    // gatewayAddress 为当前域名+7171端口
+    let gatewayAddress = `ws://${window.location.hostname}:7171/jet/rdp`;
+    // let hostname = '10.10.0.3:3389';
+    // hosname 从 URL 参数中获取
+    let hostname = params.get('hostname') || '';
     let domain = '';
-    let authtoken = '';
+    let authtoken = params.get('authtoken') || '';
     let kdc_proxy_url = '';
     let desktopSize = { width: 1280, height: 720 };
     let pcb = '';
@@ -125,7 +128,7 @@
             .withServerDomain(domain)
             .withAuthToken(authtoken)
             .withDesktopSize(desktopSize)
-            .withExtension(displayControl(true));
+            .withExtension(displayControl(false));
 
         if (pcb !== '') {
             configBuilder.withExtension(preConnectionBlob(pcb));
@@ -175,64 +178,12 @@
                     <div class="medium-space" />
                     <div>
                         <div class="field label border">
-                            <input id="hostname" type="text" bind:value={hostname} />
-                            <label for="hostname">Hostname</label>
-                        </div>
-                        <div class="field label border">
-                            <input id="domain" type="text" bind:value={domain} />
-                            <label for="domain">Domain</label>
-                        </div>
-                        <div class="field label border">
                             <input id="username" type="text" bind:value={username} />
                             <label for="username">Username</label>
                         </div>
                         <div class="field label border">
                             <input id="password" type="password" bind:value={password} />
                             <label for="password">Password</label>
-                        </div>
-                        <div class="field label border">
-                            <input id="gatewayAddress" type="text" bind:value={gatewayAddress} />
-                            <label for="gatewayAddress">Gateway Address</label>
-                        </div>
-                        <div class="field label border">
-                            <input id="authtoken" type="text" bind:value={authtoken} />
-                            <label for="authtoken">AuthToken (Optional)</label>
-                        </div>
-                        <div class="field label border">
-                            <input id="pcb" type="text" bind:value={pcb} />
-                            <label for="pcb">Pre Connection Blob</label>
-                        </div>
-                        <div class="field label border">
-                            <input id="desktopSizeW" type="text" bind:value={desktopSize.width} />
-                            <label for="desktopSizeW">Desktop Width</label>
-                        </div>
-                        <div class="field label border">
-                            <input id="desktopSizeH" type="text" bind:value={desktopSize.height} />
-                            <label for="desktopSizeH">Desktop Height</label>
-                        </div>
-                        <div class="field label border">
-                            <input id="kdc_proxy_url" type="text" bind:value={kdc_proxy_url} />
-                            <label for="kdc_proxy_url">KDC Proxy URL</label>
-                        </div>
-                        <div class="field label border checkbox-container">
-                            <div class="checkbox-wrapper">
-                                <input
-                                    id="use_pop_up"
-                                    type="checkbox"
-                                    bind:checked={pop_up}
-                                    style="width: 1.5em; height: 1.5em; margin-right: 0.5em;"
-                                />
-                                <label for="use_pop_up">Use Pop Up</label>
-                            </div>
-                            <div class="checkbox-wrapper">
-                                <input
-                                    id="enable_clipboard"
-                                    type="checkbox"
-                                    bind:checked={enable_clipboard}
-                                    style="width: 1.5em; height: 1.5em; margin-right: 0.5em;"
-                                />
-                                <label for="enable_clipboard">Enable Clipboard</label>
-                            </div>
                         </div>
                     </div>
                     <nav class="center-align">
